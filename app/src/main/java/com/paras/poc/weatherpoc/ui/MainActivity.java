@@ -97,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //showProgressBar();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onSuccess(Location location) {
@@ -121,6 +120,33 @@ public class MainActivity extends AppCompatActivity {
                                     throw new RuntimeException(e);
                                 }
 
+                            }
+                            else {
+                                city = getLastSearchedCity();
+
+                                if(!city.equals("")) {
+                                    Toast.makeText(MainActivity.this, "Last searched location data found!" +
+                                            "\nShowing weather data of that City.", Toast.LENGTH_SHORT).show();
+                                    getWeatherData(city);
+                                }
+                                else {
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    Toast.makeText(MainActivity.this, "No last searched location data found!", Toast.LENGTH_SHORT).show();
+                                    displayScrollView.setVisibility(View.INVISIBLE);
+                                    searchScrollView.setVisibility(View.VISIBLE);
+
+                                    inputText = (TextInputEditText) findViewById(R.id.input_text);
+                                    search_btn = (MaterialButton) findViewById(R.id.search_btn);
+
+                                    search_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            city = inputText.getText().toString();
+                                            storeLastSearchedCity(city);
+                                            getWeatherData(city);
+                                        }
+                                    });
+                                }
                             }
                         }
                     });
