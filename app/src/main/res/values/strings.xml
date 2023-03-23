@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">WeatherPOC</string>
+    <string name="input_txt">Enter city name, id or zip-code</string>
+    <string name="search_btn">Search</string>
+    <string name="app_title">Weather App</string>
+    <string name="text_temperature">Temperature</string>
+    <string name="text_min_temperature">Min Temperature</string>
+    <string name="text_max_temperature">Max Temperature</string>
+    <string name="text_air_pressure">Air Pressure</string>
+    <string name="text_humidity">Humidity</string>
+    <string name="text_wind_speed">Wind Speed</string>
+    <string name="text_wind_direction">Wind Direction</string>
+    <string name="text_sunrise_time">Sunrise Time</string>
+    <string name="text_sunset_time">Sunset Time</string>
+    <string name="text_location">Location</string>
+    <string name="text_current_date_time"><![CDATA[Current Date & Time]]></string>
+    <string name="error_message">Empty Response</string>
+</resources>
