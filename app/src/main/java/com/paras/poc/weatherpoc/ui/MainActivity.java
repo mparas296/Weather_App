@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
                                     String cityName = addresses.get(0).getLocality();
                                     locationTxt.setText("Location: " + cityName);
 
+                                    Log.e("Current Location",cityName);
+
                                     //TODO Call Weather by city
                                     getWeatherData(cityName);
 
@@ -142,8 +144,13 @@ public class MainActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(View view) {
                                             city = inputText.getText().toString();
-                                            storeLastSearchedCity(city);
-                                            getWeatherData(city);
+                                            if(!city.equals("")) {
+                                                storeLastSearchedCity(city);
+                                                getWeatherData(city);
+                                            }
+                                            else {
+                                                Toast.makeText(MainActivity.this, "City name not valid!", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     });
                                 }
@@ -225,11 +232,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  void getWeatherData(String City) {
-        if(!city.equals("")) {
-            RetrofitInstance.getWeatherInstance().weatherApi.getWeather(City,API_KEY).enqueue(new Callback<WeatherModel>() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
+        RetrofitInstance.getWeatherInstance().weatherApi.getWeather(City,API_KEY).enqueue(new Callback<WeatherModel>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<WeatherModel> call, Response<WeatherModel> response) {
+
+                if(response.code() > 400 && response.code() < 500) {
+                    Toast.makeText(MainActivity.this, "Please enter a valid city!", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     weatherModel = response.body();
 
                 /*Getting desired values from the API & Converting them to standard
@@ -320,17 +331,14 @@ public class MainActivity extends AppCompatActivity {
 
                     Toast.makeText(MainActivity.this, "Location Data Updated!", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<WeatherModel> call, Throwable t) {
-                    Log.e("weather api","onFailure: " + t.getLocalizedMessage());
-                    Toast.makeText(MainActivity.this, "Weather Api call failed!", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        else {
-            Toast.makeText(this, "Please Enter a valid city name!", Toast.LENGTH_SHORT).show();
-        }
+            @Override
+            public void onFailure(Call<WeatherModel> call, Throwable t) {
+                Log.e("weather api","onFailure: " + t.getLocalizedMessage());
+                Toast.makeText(MainActivity.this, "Weather Api call failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void storeLastSearchedCity(String city) {
